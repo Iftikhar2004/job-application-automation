@@ -16,9 +16,17 @@ app = FastAPI(
 )
 
 # CORS Configuration
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://job-application-automation-ten.vercel.app",
+    "https://job-application-automation-git-main-iftikhars-projects-1c8c842f.vercel.app",
+    "https://job-application-automation-2dobp5yhw.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # React dev servers
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
