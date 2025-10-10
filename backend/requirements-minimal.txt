@@ -1,0 +1,33 @@
+# Essential dependencies for basic functionality
+# Web Scraping
+beautifulsoup4
+requests
+
+# Web Framework
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Database
+sqlalchemy
+
+# NLP & ML (minimal)
+scikit-learn
+
+# OpenAI for cover letter generation
+openai
+
+# Data Processing
+pandas
+
+# Environment & Configuration
+python-dotenv
+pydantic
+pydantic-settings
+
+# Security & Auth
+python-jose[cryptography]
+passlib[bcrypt]
+
+# CORS
+python-dateutil
