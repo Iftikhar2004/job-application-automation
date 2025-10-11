@@ -190,7 +190,7 @@ function App() {
         </div>
 
         <footer className="footer">
-          <p>© 2024 JobTracker. Built with React & FastAPI.</p>
+          <p>JobTracker 2025 • Built with React & FastAPI</p>
         </footer>
       </div>
     </Router>
