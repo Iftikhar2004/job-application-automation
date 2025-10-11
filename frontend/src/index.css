@@ -1031,7 +1031,7 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f1f5f9;
   padding: 2rem;
 }
 
@@ -1040,9 +1040,9 @@ html {
   max-width: 1200px;
   width: 100%;
   background: white;
-  border-radius: 24px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   min-height: 600px;
 }
 
@@ -1268,5 +1268,159 @@ html {
 
   .auth-brand h1 {
     font-size: 2rem;
+  }
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.mobile-menu-btn span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .navbar-container {
+    padding: 0 1rem;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .navbar-menu {
+    position: fixed;
+    top: 70px;
+    right: -100%;
+    width: 280px;
+    height: calc(100vh - 70px);
+    background: white;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    z-index: 999;
+  }
+
+  .navbar-menu.mobile-active {
+    right: 0;
+  }
+
+  .nav-link {
+    width: 100%;
+    color: #334155;
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+
+  .nav-link:hover {
+    background: #f1f5f9;
+  }
+
+  .nav-link-active {
+    background: #e0e7ff !important;
+    color: #667eea !important;
+  }
+
+  .nav-link-active::after {
+    display: none;
+  }
+
+  .nav-link-cta {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .navbar-profile {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .profile-button {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .profile-dropdown {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+    margin-top: 8px;
+  }
+
+  .auth-split-container {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .auth-left-panel {
+    padding: 2rem;
+    min-height: 200px;
+  }
+
+  .auth-right-panel {
+    padding: 2rem;
+  }
+
+  .auth-brand h1 {
+    font-size: 2rem;
+  }
+
+  .auth-features {
+    display: none;
+  }
+
+  .logo-text h1 {
+    font-size: 1.25rem;
+  }
+
+  .logo-text span {
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 0;
+  }
+
+  .auth-split-container {
+    border-radius: 0;
+  }
+
+  .auth-left-panel,
+  .auth-right-panel {
+    padding: 1.5rem;
+  }
+
+  .modern-navbar {
+    position: relative;
+  }
+
+  .navbar-container {
+    height: 60px;
   }
 }

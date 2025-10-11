@@ -14,6 +14,7 @@ function Navigation() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState('')
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showMobileMenu, setShowMobileMenu] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -54,22 +55,31 @@ function Navigation() {
           </div>
         </Link>
 
-        <div className="navbar-menu">
+        <button
+          className="mobile-menu-btn"
+          onClick={() => setShowMobileMenu(!showMobileMenu)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div className={`navbar-menu ${showMobileMenu ? 'mobile-active' : ''}`}>
           {isLoggedIn ? (
             <>
-              <Link to="/" className={`nav-link ${isActive('/')}`}>
+              <Link to="/" className={`nav-link ${isActive('/')}`} onClick={() => setShowMobileMenu(false)}>
                 Home
               </Link>
-              <Link to="/scraper" className={`nav-link ${isActive('/scraper')}`}>
+              <Link to="/scraper" className={`nav-link ${isActive('/scraper')}`} onClick={() => setShowMobileMenu(false)}>
                 Scraper
               </Link>
-              <Link to="/jobs" className={`nav-link ${isActive('/jobs')}`}>
+              <Link to="/jobs" className={`nav-link ${isActive('/jobs')}`} onClick={() => setShowMobileMenu(false)}>
                 Jobs
               </Link>
-              <Link to="/applications" className={`nav-link ${isActive('/applications')}`}>
+              <Link to="/applications" className={`nav-link ${isActive('/applications')}`} onClick={() => setShowMobileMenu(false)}>
                 Applications
               </Link>
-              <Link to="/dashboard" className={`nav-link ${isActive('/dashboard')}`}>
+              <Link to="/dashboard" className={`nav-link ${isActive('/dashboard')}`} onClick={() => setShowMobileMenu(false)}>
                 Dashboard
               </Link>
 
@@ -92,7 +102,10 @@ function Navigation() {
                     <Link
                       to="/profile"
                       className="profile-dropdown-item"
-                      onClick={() => setShowProfileMenu(false)}
+                      onClick={() => {
+                        setShowProfileMenu(false)
+                        setShowMobileMenu(false)
+                      }}
                     >
                       My Profile
                     </Link>
@@ -108,10 +121,10 @@ function Navigation() {
             </>
           ) : (
             <>
-              <Link to="/login" className={`nav-link ${isActive('/login')}`}>
+              <Link to="/login" className={`nav-link ${isActive('/login')}`} onClick={() => setShowMobileMenu(false)}>
                 Login
               </Link>
-              <Link to="/signup" className="nav-link-cta">
+              <Link to="/signup" className="nav-link-cta" onClick={() => setShowMobileMenu(false)}>
                 Sign Up
               </Link>
             </>
