@@ -13,6 +13,7 @@ function Navigation() {
   const location = useLocation()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState('')
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -29,7 +30,7 @@ function Navigation() {
   }
 
   const isActive = (path) => {
-    return location.pathname === path ? 'active' : ''
+    return location.pathname === path ? 'nav-link-active' : ''
   }
 
   // Don't show navigation on login/signup pages
@@ -38,46 +39,81 @@ function Navigation() {
   }
 
   return (
-    <nav className="navbar">
-      <div className="navbar-content">
-        <div className="navbar-brand">
-          <h1>Job Automation</h1>
-          <p className="navbar-tagline">AI-Powered Job Search Platform</p>
-        </div>
-        <div className="nav-links">
+    <nav className="modern-navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-logo">
+          <div className="logo-icon">🚀</div>
+          <div className="logo-text">
+            <h1>JobAuto</h1>
+            <span>AI-Powered</span>
+          </div>
+        </Link>
+
+        <div className="navbar-menu">
           {isLoggedIn ? (
             <>
-              <Link to="/" className={isActive('/')}>
+              <Link to="/" className={`nav-link ${isActive('/')}`}>
+                <span className="nav-icon">🏠</span>
                 Home
               </Link>
-              <Link to="/profile" className={isActive('/profile')}>
-                Profile
-              </Link>
-              <Link to="/scraper" className={isActive('/scraper')}>
+              <Link to="/scraper" className={`nav-link ${isActive('/scraper')}`}>
+                <span className="nav-icon">🔍</span>
                 Scraper
               </Link>
-              <Link to="/jobs" className={isActive('/jobs')}>
+              <Link to="/jobs" className={`nav-link ${isActive('/jobs')}`}>
+                <span className="nav-icon">💼</span>
                 Jobs
               </Link>
-              <Link to="/applications" className={isActive('/applications')}>
+              <Link to="/applications" className={`nav-link ${isActive('/applications')}`}>
+                <span className="nav-icon">📝</span>
                 Applications
               </Link>
-              <Link to="/dashboard" className={isActive('/dashboard')}>
+              <Link to="/dashboard" className={`nav-link ${isActive('/dashboard')}`}>
+                <span className="nav-icon">📊</span>
                 Dashboard
               </Link>
-              <div className="user-info">
-                <span>{userEmail}</span>
-                <button onClick={handleLogout} className="btn-logout">
-                  Logout
+
+              <div className="navbar-profile">
+                <button
+                  className="profile-button"
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                >
+                  <div className="profile-avatar">
+                    {userEmail.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="profile-arrow">▼</span>
                 </button>
+
+                {showProfileMenu && (
+                  <div className="profile-dropdown">
+                    <div className="profile-dropdown-header">
+                      <div className="profile-email">{userEmail}</div>
+                    </div>
+                    <Link
+                      to="/profile"
+                      className="profile-dropdown-item"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <span className="nav-icon">👤</span>
+                      My Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="profile-dropdown-item logout-item"
+                    >
+                      <span className="nav-icon">🚪</span>
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             </>
           ) : (
             <>
-              <Link to="/login" className={isActive('/login')}>
+              <Link to="/login" className={`nav-link ${isActive('/login')}`}>
                 Login
               </Link>
-              <Link to="/signup" className={isActive('/signup')}>
+              <Link to="/signup" className="nav-link-cta">
                 Sign Up
               </Link>
             </>
