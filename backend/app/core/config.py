@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./job_automation.db"
 
     # API Keys
-    OPENAI_API_KEY: Optional[str] = None
+    GEMINI_API_KEY: Optional[str] = None
 
     # Security
     SECRET_KEY: str = "your-secret-key-change-in-production"

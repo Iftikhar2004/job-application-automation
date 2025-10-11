@@ -1,6 +1,6 @@
 from typing import Dict, Optional
 import logging
-from openai import OpenAI
+import google.generativeai as genai
 from app.core.config import settings
 
 logging.basicConfig(level=logging.INFO)
@@ -8,15 +8,16 @@ logger = logging.getLogger(__name__)
 
 
 class CoverLetterGenerator:
-    """Generate personalized cover letters using OpenAI API"""
+    """Generate personalized cover letters using Google Gemini API"""
 
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or settings.OPENAI_API_KEY
+        self.api_key = api_key or settings.GEMINI_API_KEY
         if self.api_key:
-            self.client = OpenAI(api_key=self.api_key)
+            genai.configure(api_key=self.api_key)
+            self.client = genai.GenerativeModel('gemini-2.0-flash-exp')
         else:
             self.client = None
-            logger.warning("OpenAI API key not provided. Cover letter generation will use templates.")
+            logger.warning("Gemini API key not provided. Cover letter generation will use templates.")
 
     def generate_cover_letter(
         self,
@@ -64,12 +65,12 @@ class CoverLetterGenerator:
         user_experience: str,
         tone: str
     ) -> str:
-        """Generate cover letter using OpenAI API"""
+        """Generate cover letter using Gemini API"""
         try:
             skills_str = ", ".join(user_skills)
 
             prompt = f"""
-Write a compelling cover letter for a job application with the following details:
+You are an expert career coach and cover letter writer. Write a compelling cover letter for a job application with the following details:
 
 Job Title: {job_title}
 Company: {company}
@@ -92,17 +93,8 @@ Requirements:
 Format the letter professionally with proper greeting and sign-off.
 """
 
-            response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are an expert career coach and cover letter writer."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.7,
-                max_tokens=500
-            )
-
-            cover_letter = response.choices[0].message.content.strip()
+            response = self.client.generate_content(prompt)
+            cover_letter = response.text.strip()
             logger.info(f"Generated AI cover letter for {job_title} at {company}")
             return cover_letter
 
@@ -160,7 +152,7 @@ Sincerely,
 
         try:
             prompt = f"""
-Given this cover letter:
+You are an expert at customizing cover letters. Given this cover letter:
 
 {base_letter}
 
@@ -170,17 +162,8 @@ Please customize it according to these requirements:
 Keep the same professional tone and format.
 """
 
-            response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "system", "content": "You are an expert at customizing cover letters."},
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.7,
-                max_tokens=500
-            )
-
-            customized = response.choices[0].message.content.strip()
+            response = self.client.generate_content(prompt)
+            customized = response.text.strip()
             logger.info("Cover letter customized successfully")
             return customized
 
