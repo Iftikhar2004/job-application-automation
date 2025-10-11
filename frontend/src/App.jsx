@@ -42,10 +42,15 @@ function Navigation() {
     <nav className="modern-navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          <div className="logo-icon">🚀</div>
+          <div className="logo-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 4h4v3h-4V4zm10 16H4V9h16v11z" fill="white"/>
+              <path d="M12 11c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0 4c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z" fill="white"/>
+            </svg>
+          </div>
           <div className="logo-text">
-            <h1>JobAuto</h1>
-            <span>AI-Powered</span>
+            <h1>JobTracker</h1>
+            <span>Professional Edition</span>
           </div>
         </Link>
 
@@ -53,23 +58,18 @@ function Navigation() {
           {isLoggedIn ? (
             <>
               <Link to="/" className={`nav-link ${isActive('/')}`}>
-                <span className="nav-icon">🏠</span>
                 Home
               </Link>
               <Link to="/scraper" className={`nav-link ${isActive('/scraper')}`}>
-                <span className="nav-icon">🔍</span>
                 Scraper
               </Link>
               <Link to="/jobs" className={`nav-link ${isActive('/jobs')}`}>
-                <span className="nav-icon">💼</span>
                 Jobs
               </Link>
               <Link to="/applications" className={`nav-link ${isActive('/applications')}`}>
-                <span className="nav-icon">📝</span>
                 Applications
               </Link>
               <Link to="/dashboard" className={`nav-link ${isActive('/dashboard')}`}>
-                <span className="nav-icon">📊</span>
                 Dashboard
               </Link>
 
@@ -94,14 +94,12 @@ function Navigation() {
                       className="profile-dropdown-item"
                       onClick={() => setShowProfileMenu(false)}
                     >
-                      <span className="nav-icon">👤</span>
                       My Profile
                     </Link>
                     <button
                       onClick={handleLogout}
                       className="profile-dropdown-item logout-item"
                     >
-                      <span className="nav-icon">🚪</span>
                       Logout
                     </button>
                   </div>
@@ -179,7 +177,7 @@ function App() {
         </div>
 
         <footer className="footer">
-          <p>Built using React, FastAPI, and AI</p>
+          <p>© 2024 JobTracker. Built with React & FastAPI.</p>
         </footer>
       </div>
     </Router>
