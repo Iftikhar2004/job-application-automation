@@ -4,8 +4,7 @@ from typing import List
 from pydantic import BaseModel
 
 from app.core.database import get_db
-from app.scrapers.indeed_scraper import IndeedScraper
-from app.scrapers.arbeitnow_scraper import ArbeitnowScraper
+from app.scrapers.multi_source_scraper import MultiSourceScraper
 from app.models.models import Job
 from app.services.nlp_service import NLPJobAnalyzer
 from datetime import datetime
@@ -15,6 +14,7 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 nlp_analyzer = NLPJobAnalyzer()
+multi_scraper = MultiSourceScraper()
 
 
 # Pydantic schemas
@@ -22,7 +22,7 @@ class ScrapeRequest(BaseModel):
     query: str
     location: str = ""
     num_pages: int = 1
-    source: str = "indeed"
+    sources: List[str] = ["indeed", "linkedin"]  # Multiple sources
 
 
 class ScrapeResponse(BaseModel):
@@ -35,20 +35,13 @@ def scrape_and_save_jobs(
     query: str,
     location: str,
     num_pages: int,
-    source: str,
+    sources: List[str],
     db: Session
 ):
-    """Background task to scrape and save jobs"""
+    """Background task to scrape and save jobs from multiple sources"""
     try:
-        if source.lower() == "indeed":
-            scraper = IndeedScraper()
-            jobs = scraper.search_jobs(query, location, num_pages)
-        elif source.lower() == "arbeitnow":
-            scraper = ArbeitnowScraper()
-            jobs = scraper.search_jobs(query, location, num_pages)
-        else:
-            logger.error(f"Unsupported source: {source}")
-            return
+        # Use multi-source scraper
+        jobs = multi_scraper.search_jobs(query, location, num_pages, sources)
 
         saved_count = 0
 
@@ -116,10 +109,13 @@ async def scrape_jobs(
     Returns:
         Response with scraping status
     """
-    if scrape_request.source.lower() not in ["indeed", "arbeitnow"]:
+    available_sources = multi_scraper.get_available_sources()
+    invalid_sources = [s for s in scrape_request.sources if s not in available_sources]
+
+    if invalid_sources:
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported source: {scrape_request.source}. Supported: indeed, arbeitnow"
+            detail=f"Invalid sources: {invalid_sources}. Available: {available_sources}"
         )
 
     # Add scraping task to background
@@ -128,12 +124,12 @@ async def scrape_jobs(
         scrape_request.query,
         scrape_request.location,
         scrape_request.num_pages,
-        scrape_request.source,
+        scrape_request.sources,
         db
     )
 
     return ScrapeResponse(
-        message=f"Scraping started for {scrape_request.source}",
+        message=f"Scraping started from: {', '.join(scrape_request.sources)}",
         jobs_found=0,
         jobs_saved=0
     )
@@ -153,29 +149,22 @@ def scrape_jobs_sync(
     Returns:
         Response with number of jobs found and saved
     """
-    if scrape_request.source.lower() not in ["indeed", "arbeitnow"]:
+    available_sources = multi_scraper.get_available_sources()
+    invalid_sources = [s for s in scrape_request.sources if s not in available_sources]
+
+    if invalid_sources:
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported source: {scrape_request.source}. Supported: indeed, arbeitnow"
+            detail=f"Invalid sources: {invalid_sources}. Available: {available_sources}"
         )
 
     try:
-        if scrape_request.source.lower() == "indeed":
-            scraper = IndeedScraper()
-            jobs = scraper.search_jobs(
-                scrape_request.query,
-                scrape_request.location,
-                scrape_request.num_pages
-            )
-        elif scrape_request.source.lower() == "arbeitnow":
-            scraper = ArbeitnowScraper()
-            jobs = scraper.search_jobs(
-                scrape_request.query,
-                scrape_request.location,
-                scrape_request.num_pages
-            )
-        else:
-            jobs = []
+        jobs = multi_scraper.search_jobs(
+            scrape_request.query,
+            scrape_request.location,
+            scrape_request.num_pages,
+            scrape_request.sources
+        )
 
         saved_count = 0
 
