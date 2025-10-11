@@ -69,29 +69,35 @@ class CoverLetterGenerator:
         try:
             skills_str = ", ".join(user_skills)
 
-            prompt = f"""
-You are an expert career coach and cover letter writer. Write a compelling cover letter for a job application with the following details:
+            prompt = f"""Write a professional, human-sounding cover letter for this job application. The letter should NOT look AI-generated.
 
-Job Title: {job_title}
-Company: {company}
-Job Description: {job_description}
+Job Details:
+- Position: {job_title}
+- Company: {company}
+- Job Description: {job_description}
 
-Applicant Information:
+Candidate Details:
 - Name: {user_name}
 - Skills: {skills_str}
 - Experience: {user_experience}
 
-Requirements:
-1. Keep it concise (3-4 paragraphs, max 300 words)
-2. Tone: {tone}
-3. Highlight relevant skills that match the job description
-4. Show enthusiasm for the role and company
-5. Include a strong opening and closing
-6. Make it personalized and specific to this role
-7. Avoid generic statements
+CRITICAL REQUIREMENTS:
+1. Write ONLY the body paragraphs - NO placeholder headers like [Your Name], [Date], [Address], etc.
+2. Start directly with "Dear Hiring Manager," or "Dear [Company] Team,"
+3. Write 3-4 concise paragraphs (250-300 words total)
+4. Use a {tone} tone
+5. Make it sound natural and conversational, NOT robotic
+6. Highlight 2-3 relevant skills that match the job requirements
+7. Show genuine enthusiasm for the role and company
+8. Include specific details from the job description
+9. End with "Best regards," or "Sincerely," followed by just the name: {user_name}
+10. NO brackets, NO placeholders, NO instructions to the reader
+11. Write in first person and make it personal
 
-Format the letter professionally with proper greeting and sign-off.
-"""
+Example of what NOT to do: "[Your experience]", "[ Briefly mention...]", "[Company Address]"
+Example of what TO do: Direct, complete sentences with real content.
+
+Write the cover letter now:"""
 
             response = self.client.generate_content(prompt)
             cover_letter = response.text.strip()
